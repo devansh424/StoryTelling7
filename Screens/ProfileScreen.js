@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 
-export default class FeedScreen extends React.Component{
+export default class ProfileScreen extends React.Component{
     render(){
         return(
             <View style={styles.container}> 
                 <Text>
-                    FeedScreen
+                    ProfileScreen
                 </Text>
             </View>
         );
