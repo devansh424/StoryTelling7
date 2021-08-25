@@ -1,21 +1,31 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { StyleSheet } from "react-native";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs"
 import FeedScreen from '../Screens/feedScreen';
-import StoryScreen from '../Screens/storyScreen';
-import { Icon } from "react-native-elements";
+import StoryScreen from '../Screens/StoryScreen';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { RFValue } from "react-native-responsive-fontsize";
 
-var Tab = createBottomTabNavigator();
+var Tab = createMaterialBottomTabNavigator();
 
 const TabNavigator = () => {
     return(
-      <Tab.Navigator screenOptions={({route})=>({
+      <Tab.Navigator 
+      labeled={false}
+      activeColor="red"
+      inactiveColor="cyan"
+      barStyle={styles.barstyle}
+      
+      screenOptions={({route})=>({
           tabBarIcon:({focused,color,size})=>{
               let iconName
               if(route.name==="Home"){
-                  return <Icon name="home" type="font-awesome"/>
+                iconName = focused ? 'book' : 'book-outline';
               }else if(route.name==="Story"){
-                return <Icon name="book" type="font-awesome"/>
+                iconName = focused ? 'create' : 'create-outline';
               }
+
+              return <Ionicons name={iconName} size={RFValue(30)} color={color} />;
           }
       })}>
         <Tab.Screen name="Home" component={FeedScreen}/>
@@ -23,5 +33,16 @@ const TabNavigator = () => {
       </Tab.Navigator>
     );
 }
+
+const styles = StyleSheet.create({
+  barstyle:{
+    backgroundColor:"blue",
+    borderTopLeftRadius:20,
+    borderTopRightRadius:20,
+    overflow:"hidden",
+    position:"absolute",
+    height:"8%"
+  }
+});
 
 export default TabNavigator;
