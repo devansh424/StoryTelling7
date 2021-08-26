@@ -84,7 +84,7 @@ export default class FeedScreen extends React.Component {
                     { label: "image2", value: "image_2" },
                     { label: "image3", value: "image_3" },
                     { label: "image4", value: "image_4" },
-                    { label: "image5", value: "image_5" },
+                    { label: "image5", value: "image_5" }
                   ]}
                   style={{ backgroundColor: "transparent" }}
                   containerStyle={{
