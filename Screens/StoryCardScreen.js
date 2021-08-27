@@ -35,7 +35,9 @@ export default class StoryCardScreen extends React.Component {
       return <AppLoading />;
     } else {
       return (
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={()=>{
+          this.props.navigation.navigate("FullStory",{story:this.props.story});
+        }}>
           <View>
             <Image
               source={require("../assets/story_image_1.png")}
@@ -51,7 +53,7 @@ export default class StoryCardScreen extends React.Component {
             <Text style={styles.apptext}>{this.props.story.author}</Text>
             <Text style={styles.apptext}>{this.props.story.description}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       );
     }
   }
@@ -61,7 +63,9 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#15193c",
+    backgroundColor: "#15293d",
+    borderRadius:RFValue(30),
+    marginTop:RFValue(20),
   },
   apptext: {
     color: "white",

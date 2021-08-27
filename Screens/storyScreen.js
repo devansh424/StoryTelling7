@@ -35,6 +35,7 @@ export default class FeedScreen extends React.Component {
       description: "",
       story: "",
       moral: "",
+      open:false,
     };
   }
 
@@ -86,25 +87,25 @@ export default class FeedScreen extends React.Component {
                     { label: "image4", value: "image_4" },
                     { label: "image5", value: "image_5" }
                   ]}
-                  style={{ backgroundColor: "transparent" }}
+                  style={{ backgroundColor: "#15193c" }}
                   containerStyle={{
                     height: RFValue(20),
                     borderRadius: RFValue(20),
+                    backgroundColor:"#15193c",
                   }}
                   itemStyle={{ justifyContent: "flex-start" }}
-                  labelStyle={{ color: "white", fontFamily: "BubblegumSans" }}
+                  textStyle={{ color: "yellow", fontFamily: "BubblegumSans" }}
                   onOpen={() => {
-                    this.setState({ dropdownheight: 170 });
+                    this.setState({ dropdownheight: 170 , open:true});
                   }}
                   onClose={() => {
-                    this.setState({ dropdownheight: 40 });
+                    this.setState({ dropdownheight: 40 , open:false});
                   }}
                   arrowStyle={{ color: "white" }}
-                  onChangeItem={(item) => {
-                    this.setState({ previewimage: item.value });
-                  }}
+                  open={this.state.open}
                 />
               </View>
+              <View style={{marginTop:RFValue(30)}}>
               <TextInput
                 placeholder={"title"}
                 onChangeText={(text) => {
@@ -133,6 +134,7 @@ export default class FeedScreen extends React.Component {
                 }}
                 style={styles.inputstyles}
               ></TextInput>
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -159,5 +161,8 @@ var styles = StyleSheet.create({
   },
   inputstyles: {
     borderWidth: RFValue(1),
+    padding:RFValue(10),
+    color:"white",
+    margin:RFValue(5),
   },
 });

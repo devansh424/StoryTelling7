@@ -27,7 +27,7 @@ export default class FeedScreen extends React.Component{
 
     renderItem = ({item,index}) => {
         return(
-           <StoryCardScreen story={item}/>
+           <StoryCardScreen story={item} navigation={this.props.navigation}/>
         );
     }
 
