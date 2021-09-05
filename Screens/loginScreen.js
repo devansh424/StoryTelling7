@@ -38,7 +38,7 @@ export default class LoginScreen extends React.Component {
               // The email of the user's account used.
               const email = error.email;
               // The credential that was used.
-              const credential = firbase.auth.GoogleAuthProvider.credentialFromError(error);
+              const credential = firebase.auth.GoogleAuthProvider.credentialFromError(error);
               // ...
             });
             } else {

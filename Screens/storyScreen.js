@@ -24,7 +24,7 @@ let customFonts = {
   BubblegumSans: require("../assets/fonts/BubblegumSans-Regular.ttf"),
 };
 
-export default class FeedScreen extends React.Component {
+export default class StoryScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
