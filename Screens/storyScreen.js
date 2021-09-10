@@ -10,6 +10,8 @@ import {
   Image,
   TextInput,
   ScrollView,
+  Alert,
+  ShadowPropTypesIOS,
 } from "react-native";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
@@ -18,6 +20,7 @@ import { FlatList } from "react-native-gesture-handler";
 import StoryCardScreen from "./StoryCardScreen";
 import { RFValue } from "react-native-responsive-fontsize";
 import DropDownPicker from "react-native-dropdown-picker";
+import firebase from "firebase";
 
 let stories = require("../temp_stories.json");
 let customFonts = {
@@ -36,6 +39,7 @@ export default class StoryScreen extends React.Component {
       story: "",
       moral: "",
       open:false,
+      lighttheme:false
     };
   }
 
@@ -46,8 +50,35 @@ export default class StoryScreen extends React.Component {
     });
   }
 
+  addStory = async () =>{
+    if(this.state.title && this.state.description && this.state.story && this.state.moral){
+      await firebase.database().ref("stories/" + Math.random().toString(32).slice(2)).update({
+        title:this.state.title,
+        description:this.state.description,
+        story:this.state.story,
+        moral:this.state.moral,
+        author:firebase.auth().currentUser.displayName,
+        author_uid:firebase.auth().currentUser.uid,
+        create_on:new Date(),
+        likes:0,
+      });
+    }else{
+      Alert.alert("Fill all the information");
+    }
+  }
+
   componentDidMount() {
     this.loadFontAsync();
+    var theme;
+    firebase
+      .database()
+      .ref("users/" + firebase.auth().currentUser.uid)
+      .on("value", (data) => {
+        theme = data.val().current_theme;
+        this.setState({
+          lighttheme: theme === "light" ? true : false,
+        });
+      });
   }
 
   render() {
@@ -63,9 +94,9 @@ export default class StoryScreen extends React.Component {
       };
 
       return (
-        <View style={styles.container}>
+        <View style={this.state.lighttheme? styles.containerlight : styles.containerdark}>
           <SafeAreaView style={styles.droidSafeArea} />
-          <Text style={styles.apptitle}>CreateStoryScreen</Text>
+          <Text style={this.state.lighttheme? styles.apptitlelight : styles.apptitledark}>CreateStoryScreen</Text>
           <View style={{ flex: 1 }}>
             <ScrollView>
               <Image
@@ -87,14 +118,14 @@ export default class StoryScreen extends React.Component {
                     { label: "image4", value: "image_4" },
                     { label: "image5", value: "image_5" }
                   ]}
-                  style={{ backgroundColor: "#15193c" }}
+                  style={this.state.lighttheme? styles.dropdownstylelight : styles.dropdownstyledark}
                   containerStyle={{
                     height: RFValue(20),
                     borderRadius: RFValue(20),
                     backgroundColor:"#15193c",
                   }}
                   itemStyle={{ justifyContent: "flex-start" }}
-                  textStyle={{ color: "yellow", fontFamily: "BubblegumSans" }}
+                  textStyle={{ color: "#15193c", fontFamily: "BubblegumSans" }}
                   onOpen={() => {
                     this.setState({ dropdownheight: 170 , open:true});
                   }}
@@ -111,30 +142,38 @@ export default class StoryScreen extends React.Component {
                 onChangeText={(text) => {
                   this.setState({ title: text });
                 }}
-                style={styles.inputstyles}
+                style={this.state.lighttheme? styles.inputstyleslight : styles.inputstylesdark}
               ></TextInput>
               <TextInput
                 placeholder={"story"}
                 onChangeText={(text) => {
                   this.setState({ story: text });
                 }}
-                style={styles.inputstyles}
+                style={this.state.lighttheme? styles.inputstyleslight : styles.inputstylesdark}
               ></TextInput>
               <TextInput
                 placeholder={"moral"}
                 onChangeText={(text) => {
                   this.setState({ moral: text });
                 }}
-                style={styles.inputstyles}
+                style={this.state.lighttheme? styles.inputstyleslight : styles.inputstylesdark}
               ></TextInput>
               <TextInput
                 placeholder={"description"}
                 onChangeText={(text) => {
                   this.setState({ description: text });
                 }}
-                style={styles.inputstyles}
+                style={this.state.lighttheme? styles.inputstyleslight : styles.inputstylesdark}
               ></TextInput>
               </View>
+
+              <TouchableOpacity style={this.state.lighttheme? styles.buttonlight : styles.buttondark} onPress={()=>{
+                this.addStory()
+              }}>
+                <Text style={this.state.lighttheme? styles.lighttext : styles.darktext}>
+                  Submit
+                </Text>
+              </TouchableOpacity>
             </ScrollView>
           </View>
         </View>
@@ -144,25 +183,80 @@ export default class StoryScreen extends React.Component {
 }
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#15193c",
-  },
   droidSafeArea: {
     marginTop:
       Platform.OS === "android" ? StatusBar.currentHeight : RFValue(35),
   },
-  apptitle: {
-    color: "white",
-    fontFamily: "BubblegumSans",
-    fontSize: RFValue(30),
-    marginBottom: RFValue(15),
-  },
-  inputstyles: {
+  inputstyleslight: {
+    backgroundColor:"#15193c",
+    borderColor:"#15193c",
+    borderRadius:50,
     borderWidth: RFValue(1),
     padding:RFValue(10),
     color:"white",
     margin:RFValue(5),
   },
+  inputstylesdark: {
+    backgroundColor:"white",
+    borderRadius:50,
+    borderColor:"white",
+    borderWidth: RFValue(1),
+    padding:RFValue(10),
+    color:"#15193c",
+    margin:RFValue(5),
+  },
+  containerdark: {
+    flex: 1,
+    backgroundColor: "#15193c",
+  },
+  containerlight: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
+  apptitlelight: {
+    color: "#15193c",
+    fontFamily: "BubblegumSans",
+    fontSize: RFValue(30),
+    marginBottom: RFValue(15),
+  },
+  apptitledark: {
+    color: "white",
+    fontFamily: "BubblegumSans",
+    fontSize: RFValue(30),
+    marginBottom: RFValue(15),
+  },
+  image: {
+    width: 100,
+    height: 150,
+    borderRadius: 10,
+    margin: 10,
+  },
+  darktext:{
+    color:"#15193c"
+  },
+  lighttext:{
+    color:"white"
+  },
+  buttondark:{
+    alignSelf:"center",
+    padding:20,
+    textAlign:"center",
+    borderRadius:30,
+    backgroundColor:"white"
+  },
+  buttonlight:{
+    alignSelf:"center",
+    padding:20,
+    textAlign:"center",
+    borderRadius:30,
+    backgroundColor:"#15193c"
+  },
+  dropdownstyledark:{
+    color:"white",
+    backgroundColor:"white"
+  },
+  dropdownstylelight:{
+    color:"#15193c",
+    backgroundColor:"#15193c"
+  }
 });

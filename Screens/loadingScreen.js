@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import AppLoading from "expo-app-loading";
-import firebase from "firebase";
+import * as firebase from "firebase";
 
 export default class LoadingScreen extends React.Component{
     
@@ -9,7 +9,7 @@ export default class LoadingScreen extends React.Component{
         this.checkLogin();
     }
 
-    checkLogin = async () => {
+    checkLogin = () => {
         firebase.auth().onAuthStateChanged((user)=>{
             if(user){
                 this.props.navigation.navigate("Dashboard");
