@@ -16,6 +16,11 @@ export default class StoryCardScreen extends React.Component {
     super(props);
     this.state = {
       fontloaded: false,
+      lighttheme:false,
+      story_id:this.props.story.key,
+      story_data:this.props.story.value,
+      is_liked:false,
+      likes:this.props.story.value.likes
     };
   }
 
@@ -30,30 +35,43 @@ export default class StoryCardScreen extends React.Component {
     this.loadFontAsync();
   }
 
+  likeAction = () => {
+    if(this.state.is_liked){
+      firebase.database().ref("stories/").child(this.state.story_id).child("likes").set(firebase.database.ServerValue.increment(-1))
+    }
+  }
+
   render() {
     if (!this.state.fontloaded) {
       return <AppLoading />;
     } else {
       return (
-        <TouchableOpacity style={styles.container} onPress={()=>{
-          this.props.navigation.navigate("FullStory",{story:this.props.story});
-        }}>
-          <View>
-            <Image
-              source={require("../assets/story_image_1.png")}
-              style={{
-                width: RFValue(100),
-                height: RFValue(100),
-                alignSelf: "center",
-                borderRadius: RFValue(10),
-                marginBottom: RFValue(10),
-              }}
-            />
-            <Text style={styles.apptext}>{this.props.story.title}</Text>
-            <Text style={styles.apptext}>{this.props.story.author}</Text>
-            <Text style={styles.apptext}>{this.props.story.description}</Text>
-          </View>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.container} onPress={()=>{
+            this.props.navigation.navigate("FullStory",{story:this.props.story});
+          }}>
+            <View>
+              <Image
+                source={require("../assets/story_image_1.png")}
+                style={{
+                  width: RFValue(100),
+                  height: RFValue(100),
+                  alignSelf: "center",
+                  borderRadius: RFValue(10),
+                  marginBottom: RFValue(10),
+                }}
+              />
+              <Text style={styles.apptext}>{this.props.story.title}</Text>
+              <Text style={styles.apptext}>{this.props.story.author}</Text>
+              <Text style={styles.apptext}>{this.props.story.description}</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.likeAction()}>
+            <Text>
+              like
+            </Text>
+          </TouchableOpacity>
+        </View>
       );
     }
   }
