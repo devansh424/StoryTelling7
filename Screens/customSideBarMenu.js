@@ -21,6 +21,7 @@ export default class CustomSideBarMenu extends React.Component{
     }
 
     render(){
+        var props = this.props;
         return(
             <View style={this.state.lighttheme? styles.containerdark : styles.containerlight}>
                <Image source={require("../assets/logo.png")} style={styles.image} />

@@ -20,7 +20,7 @@ export default class StoryCardScreen extends React.Component {
       story_id:this.props.story.key,
       story_data:this.props.story.value,
       is_liked:false,
-      likes:this.props.story.value.likes
+      //likes:this.props.story.value.likes
     };
   }
 
@@ -42,6 +42,7 @@ export default class StoryCardScreen extends React.Component {
   }
 
   render() {
+    console.log(this.props.story)
     if (!this.state.fontloaded) {
       return <AppLoading />;
     } else {
@@ -61,9 +62,9 @@ export default class StoryCardScreen extends React.Component {
                   marginBottom: RFValue(10),
                 }}
               />
-              <Text style={styles.apptext}>{this.props.story.title}</Text>
-              <Text style={styles.apptext}>{this.props.story.author}</Text>
-              <Text style={styles.apptext}>{this.props.story.description}</Text>
+              <Text style={styles.apptext}>{this.props.story.value.title}</Text>
+              <Text style={styles.apptext}>{this.props.story.value.author}</Text>
+              <Text style={styles.apptext}>{this.props.story.value.description}</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.likeAction()}>
